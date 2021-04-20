@@ -47,19 +47,16 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def mock_response():
     response_dict = {
-        "STATUS": "FAILED",
-        "typoSquatting": "[facebook]",
-        "comboSquatting": "[google]",
-        "soundSquatting": "[linkedIn]"
-        }
+        'STATUS': 'PASSED'
+    }
     url = request.json["domain_name"]
     print(f'flask received this url: {url}')
 
-    # combo_list = find_combosquatting(url)
-    # print(combo_list)
-    # if len(combo_list) > 0:
-    #     response_dict['comboSquatting'] = combo_list
-    #     response_dict['STATUS'] = "FAILED"
+    combo_list = find_combosquatting(url)
+    print(combo_list)
+    if len(combo_list) > 0:
+        response_dict['comboSquatting'] = combo_list
+        response_dict['STATUS'] = "FAILED"
 
     return jsonify(response_dict)
 

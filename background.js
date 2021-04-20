@@ -3,7 +3,7 @@ const filter = { urls: ["*://*/*"] }; // only care about user-entered urls and h
 const optExtraInfoSpec = ["blocking"]; // makes the web request synchronous
 
 /* the endpoint that will accept the domain to run the security checks */
-const SECURITY_ALGORITHMS_API = "http://127.0.0.1:5000/processLink";
+const SECURITY_ALGORITHMS_API = "http://127.0.0.1:5000/";
 
 /* this dictionary will hold a dictionary of links their results post-security check */
 let linkCache = {};
@@ -59,7 +59,12 @@ function webCallback(details) {
     } else {
       //Ideally display popup
       //handlePopup("http://google.com");
-      return { cancel: true };
+      //return { cancel: true };
+      return {
+        redirectUrl: chrome.runtime.getURL(
+          "static/html/warning.html?domain=" + details.url
+        ),
+      };
     }
   }
 }
