@@ -3,7 +3,7 @@ const filter = { urls: ["*://*/*"] }; // only care about user-entered urls and h
 const optExtraInfoSpec = ["blocking"]; // makes the web request synchronous
 
 /* the endpoint that will accept the domain to run the security checks */
-const SECURITY_ALGORITHMS_API = "http://127.0.0.1:5000/";
+const SECURITY_ALGORITHMS_API = "http://127.0.0.1:5000/processLink";
 
 /* this dictionary will hold a dictionary of links their results post-security check */
 let linkCache = {};
