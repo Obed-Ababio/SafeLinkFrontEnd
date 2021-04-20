@@ -14,7 +14,6 @@ into that particular page
 // Make the API calls here
 
 
-
 // Once we navigate to a tab that tab becomes active and we inject the foreground script into it.
 chrome.tabs.onActivated.addListener(tab => {
 	chrome.tabs.get(tab.tabId, current_tab_info => {
@@ -29,7 +28,22 @@ chrome.tabs.onActivated.addListener(tab => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if ( typeof request.message === 'object') {
 		// pass this to the backend
-		console.log(request.message);
+		fetch('http://localhost:5000/processLink', {
+			method: 'POST',
+			body: JSON.stringify(request.message),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8'
+			}
+		}).then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return Promise.reject(response);
+		}).then(function (data) {
+			console.log(data);
+		}).catch(function (error) {
+			console.warn('Something went wrong.', error);
+		});
 	}
 })
 
