@@ -5,6 +5,9 @@
 //==========================================
 
 
+
+/**
+
 // loop through href attributes and put them in array
 // that will be sent to backend.
 var pageLinksArray = []; 
@@ -16,7 +19,28 @@ for (var i=0; i<pageLinks.length; i++) {
 chrome.runtime.sendMessage({message: pageLinksArray});
 //console.log(pageLinksArray);
 
+**/
 
 
-// How to setup a basic flask server
-// App.py, import flask, falsk objects and define endpoints
+var currentLocation = window.location.href;
+chrome.runtime.sendMessage({message: currentLocation});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+NOTES
+How to setup a basic flask server
+App.py, import flask, falsk objects and define endpoints
+**/

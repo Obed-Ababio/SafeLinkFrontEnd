@@ -1,0 +1,63 @@
+<html lang="en">
+  <head>
+    <!-- Metadata -->
+    <meta charset="UTF-8" />
+    <meta name="description" content="option menu for SafeLink." />
+    <meta name="author" content="Mankirat Gulati" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="../../lib/cirrus.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/warning.css" />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div id="warning" class="content">
+      <div id="warning-body">
+        <div id="logo">
+          <svg style="width: 64px; height: 64px" viewBox="0 0 24 24">
+            <path
+              fill="#FFFFFF"
+              d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"
+            />
+          </svg>
+        </div>
+
+        <p id="warning-title" class="title">
+          SafeLink Detected a Malicious Domain
+        </p>
+        <p id="warning-message" class="message">
+          The domain, <strong>{url}</strong> appears threatening. Be advised
+          that the content on this site may not be trusted. The owner may
+          attempt to steal passwords or other sensitive data from you.
+        </p>
+      </div>
+
+      <div id="testResults"></div>
+
+      <div id="warning-footer">
+        <div class="btn-container">
+          <a class="button-a"
+            ><button id="p-whitelist" class="proceed-btn">Proceed</button></a
+          >
+          <a class="button-b"
+            ><button
+              href="./moreInfo.html"
+              id="p-whitelist"
+              class="proceed-btn"
+            >
+              More Info
+            </button></a
+          >
+        </div>
+      </div>
+    </div>
+    <script src="../js/warning.js"></script>
+  </body>
+</html>
