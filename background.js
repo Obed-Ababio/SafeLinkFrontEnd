@@ -32,37 +32,36 @@ function clearLinkCache() {
 
 /* the main callback that will be called anytime user makes a web request */
 function webCallback(details) {
+  runCacheCheck(details.url);
   const response = runSecurityAlgorithms(details.url);
+  linkCache[details.url] = response;
+
   console.log(details.url);
   console.log(response["STATUS"]);
 
-  //runCacheCheck(detials.url);
-  //console.log(localStorage);
-  // if (localStorage.getItem(details.url) !== null) {
-  //   return;
-  // }
-
   if (response["STATUS"] == "PASSED") {
-    /* clear cache and allow user to access the page */
-    //clearLinkCache();
     return;
   } else {
+    localStorage.removeItem("results");
+    localStorage.setItem("results", JSON.stringify(response));
     /* the requested page failed the suite of tests */
-    if (details.type == "main_frame") {
-      localStorage.setItem("results", JSON.stringify(response));
+    return {
+      redirectUrl: chrome.runtime.getURL(
+        "static/html/warning.html?domain=" + details.url
+      ),
+    };
+  }
+}
 
-      return {
-        redirectUrl: chrome.runtime.getURL(
-          "static/html/warning.html?domain=" + details.url
-        ),
-      };
+function runCacheCheck(url) {
+  if (url in linkCache) {
+    response = linkCache[url];
+    if (response["STATUS"] == "PASSED") {
+      return;
     } else {
-      //Ideally display popup
-      //handlePopup("http://google.com");
-      //return { cancel: true };
       return {
         redirectUrl: chrome.runtime.getURL(
-          "static/html/warning.html?domain=" + details.url
+          "static/html/warning.html?domain=" + url
         ),
       };
     }

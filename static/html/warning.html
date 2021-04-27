@@ -15,6 +15,45 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <style>
+      .accordion__button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        cursor: pointer;
+        color: #ffffff;
+        text-align: left;
+        transition: 0.2;
+      }
+
+      .accordion__button::after {
+        content: "\25be";
+        float: right;
+        transform: scale(1.5);
+      }
+      .accordion__button--active + .accordion__content {
+        display: block;
+      }
+      .accordion__button--active {
+        background: #ffffff;
+      }
+      .accordion__button--active::after {
+        content: "\25b4";
+      }
+
+      .accordion__content {
+        /* overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.2s; */
+
+        padding: 0 15px;
+        font-family: sans-serif;
+        background: #eeeeee;
+
+        display: none;
+        overflow: auto;
+      }
+    </style>
   </head>
 
   <body>
@@ -39,25 +78,33 @@
         </p>
       </div>
 
-      <div id="testResults"></div>
-
       <div id="warning-footer">
         <div class="btn-container">
           <a class="button-a"
             ><button id="p-whitelist" class="proceed-btn">Proceed</button></a
           >
-          <a class="button-b"
-            ><button
-              href="./moreInfo.html"
-              id="p-whitelist"
-              class="proceed-btn"
-            >
-              More Info
-            </button></a
-          >
+          <!-- <a class="button-b"
+            ><button id="more-info" class="proceed-btn">More Info</button></a
+          > -->
+        </div>
+
+        <div class="accordion"></div>
+        <button type="button" class="accordion__button">
+          More Information
+        </button>
+        <div class="accordion__content">
+          <div id="testResults"></div>
         </div>
       </div>
     </div>
     <script src="../js/warning.js"></script>
+    <script src="../js/moreInfo.js"></script>
+    <!-- <script>
+      document.querySelectorAll(".accordion__button").forEach((button) => {
+        button.addEventListener("click", () => {
+          button.classList.toggle("accordion__button--active");
+        });
+      });
+    </script> -->
   </body>
 </html>
