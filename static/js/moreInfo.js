@@ -11,8 +11,8 @@ document.querySelectorAll(".accordion__button").forEach((button) => {
 
 function generateTable() {
   var col = ["Status", "Test", "Target", "Registration", "Expiration"];
-  var table = document.createElement("table");
-  var tr = table.insertRow(-1);
+  var dropdownTable = document.createElement("table");
+  var tr = dropdownTable.insertRow(-1);
 
   // Insert Headers
   for (var i = 0; i < col.length; i++) {
@@ -21,20 +21,20 @@ function generateTable() {
     tr.appendChild(th);
   }
 
-  generateTestRow("typoSquatting");
-  generateTestRow("comboSquatting");
-  generateTestRow("soundSquatting");
-  generateTestRow("homographSquatting");
+  generateTestRow("typoSquatting", dropdownTable);
+  generateTestRow("comboSquatting", dropdownTable);
+  generateTestRow("soundSquatting", dropdownTable);
+  generateTestRow("homographSquatting", dropdownTable);
 
   var mainContainer = document.getElementById("testResults");
   var div = document.createElement("div");
   div.innerHTML = " ";
-  mainContainer.appendChild(table);
+  mainContainer.appendChild(dropdownTable);
 }
 
-function generateTestRow(testName) {
+function generateTestRow(testName, tableName) {
   /* populate test status field as either PASSED or FAILED */
-  tr = table.insertRow(-1);
+  var tr = tableName.insertRow(-1);
 
   let testResults = "";
   if (results[testName].length === 0) {
