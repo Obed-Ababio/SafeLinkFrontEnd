@@ -2,7 +2,9 @@ let results = localStorage["results"];
 results = JSON.parse(results);
 console.log(results);
 
+generateDates();
 generateTable();
+
 document.querySelectorAll(".accordion__button").forEach((button) => {
   button.addEventListener("click", () => {
     button.classList.toggle("accordion__button--active");
@@ -10,7 +12,7 @@ document.querySelectorAll(".accordion__button").forEach((button) => {
 });
 
 function generateTable() {
-  var col = ["Status", "Test", "Target", "Registration", "Expiration"];
+  var col = ["Status", "Test", "Target", "Details"];
   var dropdownTable = document.createElement("table");
   var tr = dropdownTable.insertRow(-1);
 
@@ -25,6 +27,7 @@ function generateTable() {
   generateTestRow("comboSquatting", dropdownTable);
   generateTestRow("soundSquatting", dropdownTable);
   generateTestRow("homographSquatting", dropdownTable);
+  generateTestRow("New Domain", dropdownTable);
 
   var mainContainer = document.getElementById("testResults");
   var div = document.createElement("div");
@@ -34,6 +37,15 @@ function generateTable() {
 
 function generateTestRow(testName, tableName) {
   /* populate test status field as either PASSED or FAILED */
+
+  let testNameDict = {
+    typoSquatting: "Typo Squatting",
+    comboSquatting: "Combo Squatting",
+    soundSquatting: "Sound Squatting",
+    homographSquatting: "Homograph Squatting",
+    "New Domain": "New Domain",
+  };
+
   var tr = tableName.insertRow(-1);
 
   let testResults = "";
@@ -47,7 +59,7 @@ function generateTestRow(testName, tableName) {
 
   /* add name of test */
   var testNameCell = tr.insertCell(-1);
-  testNameCell.innerHTML = testName;
+  testNameCell.innerHTML = testNameDict[testName];
 
   /*add links that domain is targeting */
   var targetCell = tr.insertCell(-1);
@@ -58,3 +70,24 @@ function generateTestRow(testName, tableName) {
     targetCell.innerHTML = targetList;
   }
 }
+
+function generateDates() {
+  var mainContainer = document.getElementById("domain-dates");
+  var registrationInfoDiv = document.createElement("div");
+  registrationInfoDiv.innerHTML =
+    "This domain was registered on " +
+    results.registration +
+    " and is set to expire on " +
+    results.expiration;
+  mainContainer.appendChild(registrationInfoDiv);
+}
+
+// function generateDates() {
+//   var mainContainer = document.getElementById("domain-dates");
+//   var registeredDiv = document.createElement("div");
+//   var expiresDiv = document.createElement("div");
+//   registeredDiv.innerHTML = "Registered on : " + results.expiration;
+//   expiresDiv.innerHTML = "Expires on : " + results.expiration;
+//   mainContainer.appendChild(registeredDiv);
+//   mainContainer.appendChild(expiresDiv);
+// }
