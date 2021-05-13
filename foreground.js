@@ -1,11 +1,3 @@
-//==========================================
-// Title:  SafeLink Foreground
-// Author: Obed Ababio
-// Date:   21 March 2021
-//==========================================
-
-
-
 /**
 
 // loop through href attributes and put them in array
@@ -21,23 +13,8 @@ chrome.runtime.sendMessage({message: pageLinksArray});
 
 **/
 
-
 var currentLocation = window.location.href;
-chrome.runtime.sendMessage({message: currentLocation});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+chrome.runtime.sendMessage({ message: currentLocation });
 
 /**
 NOTES

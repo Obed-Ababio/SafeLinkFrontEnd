@@ -10,7 +10,7 @@
   },
   "options_page": "static/html/options.html",
   "browser_action": {
-    "default_popup": "static/html/warning_modal.html",
+    "default_popup": "",
     "default_title": "SafeLink"
   },
   "permissions": [

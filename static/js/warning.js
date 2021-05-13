@@ -7,26 +7,20 @@ replaceUrl();
 document.getElementById("p-whitelist").onclick = whitelist;
 
 /* whitelist the domain that is currently blocked when the user clicks button */
-
 function whitelist() {
-  let whitelist = {};
-  chrome.storage.sync.get(["whitelisted"], function (result) {
-    whitelist = result.whitelisted;
-    whitelist[domain] = { whitelisted: "yes" };
-  });
-
-  chrome.storage.sync.set({ whitelisted: whitelist }, function () {
-    console.log("Whitelisted domain: " + domain);
-  });
+  chrome.storage.sync.set(
+    { [domain]: { whitelisted: true, onPage: domain } },
+    function () {
+      console.log("Whitelisted domain: " + domain);
+    }
+  );
 }
 
 function replaceUrl() {
   results = localStorage["results"];
-  //console.log(results)
+  console.log(results);
   if (domain) {
-    document.getElementById(
-      "warning-message"
-    ).innerHTML = document
+    document.getElementById("warning-message").innerHTML = document
       .getElementById("warning-message")
       .innerHTML.replace("{url}", domain);
 

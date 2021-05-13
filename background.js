@@ -1,3 +1,12 @@
+//==========================================
+// Title:  SafeLink Foreground
+// Authors: Obed Ababio and Daniel Sanchez
+// Date:   21 March 2021
+// Many Thanks to Prof. Timothy Barron
+// For providing the starter code for both the
+// FrontEnd and Backend of this project
+//==========================================
+
 /* web request constants */
 const filter = { urls: ["*://*/*"] }; // only care about user-entered urls and http/https scheme
 const optExtraInfoSpec = ["blocking"]; // makes the web request synchronous
@@ -15,11 +24,24 @@ let whitelist = {};
 let linkCache = {};
 
 deleteExpired(dayLimit);
+//chrome.storage.sync.clear();
 
 /* grab cache and whitelist from chrome storage */
 chrome.storage.sync.get(["linkCache"], function (result) {
   linkCache = result.linkCache;
-  whitelist = result.whitelist;
+});
+
+/* load whitelist domains from chrome storage into memory */
+chrome.storage.sync.get(null, function (items) {
+  let domains = Object.keys(items);
+  console.log(domains);
+
+  for (let domain of domains) {
+    domainInfo = items[domain];
+    if (domainInfo.whitelisted === true) {
+      whitelist[domain] = domainInfo.onPage;
+    }
+  }
 });
 
 /* check if a domain has been dropcaught by performing an AJAX request to our REST API */
@@ -38,33 +60,42 @@ function runSecurityAlgorithms(domain) {
 
 /* the main callback that will be called anytime user makes a web request */
 function webCallback(details) {
-  let domain_name = extractRootDomain(details.url);
-  let url = details.url;
   let response = {};
+  let url = details.url;
+  let domain_name = extractRootDomain(url);
 
   /* if domain has been whitelisted allow access */
-  // console.log(typeof whitelist);
-  // if (domain_name in whitelist) {
-  //   return;
-  // }
+  if (domain_name in whitelist || url in whitelist) {
+    return;
+  }
 
-  // If domain name is not in cache, run algorithm on url and add
-  // domain name to cache
+  /** If domain name is not in cache, run algorithm on url and add
+  domain name to cache **/
+
+  var start = performance.now();
+
   if (!(domain_name in linkCache)) {
     response = runSecurityAlgorithms(url);
+    var end = performance.now();
     console.log(domain_name + " : " + response["STATUS"]);
     response["DATE"] = new Date();
     linkCache[domain_name] = response;
     chrome.storage.sync.set({ linkCache: linkCache }, function () {});
+
+    var time = end - start;
+    // console.log(
+    //   "Response time of " + domain_name + " without caching: " + time
+    // );
   } else {
     response = linkCache[domain_name];
+    var end = performance.now();
+    var time = end - start;
+    //console.log("Response time of " + domain_name + " with caching: " + time);
   }
 
   if (response["STATUS"] == "PASSED") {
     return;
   } else {
-    // check if it is in whitelist; if yes, return
-
     //the requested page failed the suite of tests; redirect use to warning page
     localStorage.removeItem("results");
     localStorage.setItem("results", JSON.stringify(response));
@@ -76,6 +107,7 @@ function webCallback(details) {
   }
 }
 
+// Implemented using ideas from https://stackoverflow.com/questions/8498592/extract-hostname-name-from-string
 // This strips away file path and retains subdomain and domain
 function extractHostname(url) {
   var hostname;
@@ -135,15 +167,31 @@ function deleteExpired(days) {
 }
 
 /* takes all links on a loaded page and passes them to security algorithm */
-function checkWebPageLinks(details) {
+function processPageLinks() {
   var pageLinks = document.links;
   for (var i = 0; i < pageLinks.length; i++) {
-    const response = runSecurityAlgorithms(pageLinks[i].href);
-    linkCache[pageLinks.href[i]] = response;
+    url = pageLinks[i].href;
+    domain_name = extractRootDomain(url);
+
+    let response = {};
+
+    // If domain not already in cache, put into cache
+    if (!(domain_name in linkCache)) {
+      response = runSecurityAlgorithms(url);
+      console.log(domain_name + " : " + response["STATUS"]);
+      response["DATE"] = new Date();
+      linkCache[domain_name] = response;
+      chrome.storage.sync.set({ linkCache: linkCache }, function () {});
+    }
   }
 }
 
-//webNavigation.onCompleted.addListener(checkWebPageLinks);
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  if (changeInfo.status == "complete") {
+    console.log("Page content load complete");
+    processPageLinks();
+  }
+});
 chrome.webRequest.onBeforeRequest.addListener(
   webCallback,
   filter,
